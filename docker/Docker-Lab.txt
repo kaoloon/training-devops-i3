@@ -1,0 +1,155 @@
+##########################
+##### Install Docker #####
+##########################
+
+#1. Instal Docker CE
+curl -fsSL https://get.docker.com/ | sh
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo systemctl status docker
+
+#2. Memberikan akses perintah Docker ke User tertentu
+sudo usermod -aG docker admin
+
+#3. Menampilkan versi docker
+sudo docker version
+
+#4. Menampilkan detil instalasi docker
+sudo docker info
+
+#5. Uji instalasi docker
+sudo docker run hello-world
+
+#6. Menampilkan image yang sudah didownload
+sudo docker image ls
+
+#7. Menampilkan semua container (active ataupun exit)
+sudo docker container ls -a
+
+#############################
+##### Test image Docker #####
+#############################
+#1. Buka Docker Hub dan cari image hello world
+https://hub.docker.com
+
+#2. Jalankan image hello world
+docker run hello-world
+
+#3. Tampilkan image yang sudah didownload
+ocker image ls
+
+#4. Tampilkan semua container (upataupun exit)
+docker container ls -a
+
+
+#################################
+##### Running  Docker HTTPD #####
+#################################
+#1. Download Image HTTPD
+docker pull httpd
+
+#2. Jalankan image docker
+docker run -d --name httpd-local  httpd
+
+#3. Inspect IP Address container httpd-local
+docker inspect httpd-local | grep IPAddress
+
+#4. Akses dari host
+curl 172.17.0.2
+
+#5. Akses dari Eksternal Host
+curl IP_HOST #tidak bisa diakses
+
+
+####################################
+##### Running Docker HTTPD EXT #####
+####################################
+#1. Jalankan image docker
+docker run -d --name httpd-ext -p 8080:80 httpd
+
+#2. Tampilkan semua container yang berjalan
+docker ps
+
+#3. Inspect IP Address container httpd-local
+docker inspect httpd-ext | grep IPAddress
+
+#4. Akses dari host
+curl 172.17.0.3
+
+#5. Akses dari Eksternal Host
+curl IP_HOST:8080
+
+
+##################################
+##### Dockerfile (latihan01) #####
+##################################
+#1. Clone Project Github dan masuk ke dalamnya
+git clone https://github.com/alanadiprastyo/dockerfile-training-i3.git
+cd dockerfile-training-i3
+
+#2. Cek File Dockerfile
+cat Dockerfile
+cat src/index.html
+
+#3. Build Dockerfile
+docker build -t httpd-custom .
+
+#4. Jalankan Image Docker httpd-custom
+docker run -d --name httpd-i3 -p 10000:80 httpd-custom
+
+#5. Akses dari host Eksternal
+curl IP_HOST:100000
+
+
+####################################
+##### Publish Image Docker ISR #####
+####################################
+
+### ISR = Internal Service Registry ####
+#1. Menambahkan Settingan Insecure Registry
+sudo vi /etc/docker/daemon.json
+{
+  "insecure-registries": [
+    "192.168.1.104:5000"
+  ],
+  "disable-legacy-registry": true
+}
+
+#2. Restart Service Docker
+sudo systemctl restart docker
+
+#3. Login ke Internal Docker Registry
+docker login -u admin  192.168.1.104:5000
+#* password = rahasia
+
+#4. Tag Image & Push ke ISR
+docker tag httpd-custom 192.168.1.104:5000/httpd-custom
+
+#5. Cek Image docker
+docker images
+
+#6. Push Image ke ISR
+docker push 192.168.1.104:5000/httpd-custom
+
+#7. Hapus semua docker image dan semua Container 
+docker stop -f $(docker ps -q)
+docker rm -f $(docker ps -a -q)
+docker rmi -f $(docker images -q)
+
+#7.1 Pastikan semua container dan Image sudah dihapus
+docker ps -a
+docker images
+
+#8. Pull Image dari ISR
+docker pull 192.168.1.104:5000/httpd-custom
+docker images
+
+
+
+
+
+
+
+
+
+
