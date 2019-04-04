@@ -143,13 +143,3 @@ docker images
 #8. Pull Image dari ISR
 docker pull 192.168.1.104:5000/httpd-custom
 docker images
-
-
-
-
-
-
-
-
-
-
