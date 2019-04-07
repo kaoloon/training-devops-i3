@@ -1,0 +1,74 @@
+##########################
+##### Install Gitlab #####
+##########################
+
+#1. Install dependency
+sudo yum install curl policycoreutils-python openssh-server
+#Install, start & enable Service Postfix
+sudo yum install postfix
+systemctl start postfix
+systemctl enable postfix
+systemctl status postfix
+
+#2. Menambahkan Paket Gitlab ke Repo 
+curl \ https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.rpm.sh | \ sudo bash
+
+#3. Install Gitlab
+EXTERNAL_URL="http://gitlab.devops.com" yum install -y gitlab-ce
+
+#4. Menampilkan versi Gitlab
+sudo gitlab --version
+
+
+#############################
+##### Merubahah URL #####
+#############################
+#1. Lokasi Konfigurasi Gitlab
+cd /etc/gitlab
+sudo vim gitlab.rb
+
+#2. Rubah di bagian external_url
+external_url https://...........com
+
+#3. Setelah melakukan perubahan URL
+gitlab-ctl reconfigure
+
+
+#4. Stop dan hentikan System Firewall
+sudo systemctl disable firewalld
+sudo systemctl stop firewalld
+sudo vim /etc/selinux/config
+SELINUX=disable
+
+
+
+#################################
+##### Running  Gitlab SSH #####
+#################################
+#1. Install Git
+sudo yum install git
+
+#2. Membuat repository  
+git init 
+
+#3. Menyalin repositori
+git clone root@gitlab.devops.com
+
+#4. Menambahkan & komit
+git add "nama file/folder"
+git commit -m "Pesan komit"
+
+#5. mengirim perubahan dan mengirimkan ke server 
+git push origin master
+
+#6.Memperbarui repositori
+git pull
+
+#7. Menggabungkan repositori
+git merge <cabang>
+
+#8. menandai (menggunakan git tag)
+git tag 1.0.0 1b2e1d63ff
+
+#9. mengembalikan perubahan lokal
+git checkout -- <namaberkas>
