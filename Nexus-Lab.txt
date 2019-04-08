@@ -1,0 +1,88 @@
+####################################
+##### Install Nexus Repository #####
+####################################
+
+
+#############################
+##### Disable Firewalld #####
+#############################
+sudo systemctl disable firewalld
+sudo systemctl stop firewalld
+sudo systemctl status firewalld
+
+###########################
+##### Disable Selinux #####
+###########################
+sudo vi /etc/selinux/config
+------
+SELINUX=disabled
+-----
+sudo reboot
+
+########################
+##### Install Java #####
+########################
+#1. install repository epel-release
+sudo yum install epel-release
+
+#2. install openjdk
+sudo yum install java-1.8.0-openjdk-devel
+sudo yum install java-1.8.0-openjdk
+
+#2. check java
+java -version
+javac -version
+
+
+########################
+##### Install Nexus ####
+########################
+#1. download nexus repository & ekstrak file nexus
+wget https://sonatype-download.global.ssl.fastly.net/repository/repositoryManager/3/nexus-3.15.2-01-unix.tar.gz
+sudo tar xvf nexus-3.15.2-01-unix.tar.gz -C /opt/
+sudo ln -s /opt/nexus-3.15.2-01/ /opt/nexus
+
+#2. menambahkan user nexus
+sudo adduser nexus
+sudo passwd nexus
+
+#3. merubah owner direktory
+sudo chown -R nexus:nexus /opt/nexus
+sudo chown -R nexus:nexus /opt/sonatype-work/
+
+#4. Merubah user Run As Nexus
+sudo vim /opt/nexus/bin/nexus.rc
+run_as_user="nexus"
+
+#5. menambahkan service untuk nexus
+sudo vi /etc/systemd/system/nexus.service
+------
+[Unit]
+Description=nexus service
+After=network.target
+
+[Service]
+Type=forking
+LimitNOFILE=65536
+ExecStart=/opt/nexus/bin/nexus start
+ExecStop=/opt/nexus/bin/nexus stop
+User=nexus
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
+-------
+
+#6. Reload Daemon  & Restart service nexus 
+sudo systemctl daemon-reload && sudo systemctl enable nexus.service && sudo systemctl start nexus.service && sudo systemctl status nexus.service
+
+#################################
+##### check nexus installasi ####
+#################################
+#1. pastikan  port 8081 listen
+netstat -antp
+
+#2. Akses Dashboard
+http://x.x.x.x:8081
+username= admin
+password= admin123
