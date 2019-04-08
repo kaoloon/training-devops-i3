@@ -36,7 +36,7 @@ https://hub.docker.com
 docker run hello-world
 
 #3. Tampilkan image yang sudah didownload
-ocker image ls
+docker image ls
 
 #4. Tampilkan semua container (upataupun exit)
 docker container ls -a
