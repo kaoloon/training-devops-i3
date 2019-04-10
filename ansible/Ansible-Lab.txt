@@ -11,7 +11,7 @@ yum install openssh-clients -y
 
 #2. Edit file /etc/ansible/hosts dan tambahkan script
 [servers]
-192.168.1.172
+192.168.1.194
 
 #3. Menampilkan list host yang terdaftar di iventory
 ansible servers --list-hosts
@@ -20,7 +20,7 @@ ansible servers --list-hosts
 ssh-keygen
 
 #5. Copy SSH key public ke node server
-ssh-copy-id root@192.168.1.172
+ssh-copy-id root@192.168.1.194
 
 #6. Pengecekkan host yang aktif
 ansible all -m ping
