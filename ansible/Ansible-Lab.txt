@@ -4,7 +4,6 @@
 
 #1. Instal Ansible 
 yum install epel-release -y
-yum update -y
 yum install python -y
 yum install ansible -y
 yum install openssh-clients -y
