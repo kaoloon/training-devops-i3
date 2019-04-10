@@ -29,10 +29,10 @@ ansible all -m ping
 ansible-doc -l
 
 #8. Sample Install paket dengan Ansible
-ansible servers -b --become-user=root -m shell -a ‘yum install vsftpd -y’
+ansible servers -m shell -a ‘yum install httpd -y’
 
 #9. Pengecekkan paket yang sudah terinstall
-ansible servers -b --become-user=root -m yum -a ‘name=vsftpd state=present update_cache=true’
+ansible servers -m yum -a ‘name=httpd state=present update_cache=true’
  
 
 ## Untuk konfigurasi plabook buat file dengan ekstensi .yml (file.yml) ##
@@ -44,7 +44,7 @@ ansible servers -b --become-user=root -m yum -a ‘name=vsftpd state=present upd
     become: yes
 
     vars:
-        yumname: vsftpd
+        yumname: httpd
 
     tasks:
     - name: Install "{{ yumname }}"
@@ -58,43 +58,43 @@ ansible servers -b --become-user=root -m yum -a ‘name=vsftpd state=present upd
   gather_facts: yes
   become: yes
   tasks:
-  - name: Instalasi FTP
-    yum: name=vsftpd state=installed
+  - name: Instalasi HTTP
+    yum: name=httpd state=installed
     notify:
-     - restart vsftpd
-  - name: Enable FTP secara Permanent
-    service: name=vsftpd state=started enabled=yes
+     - restart httpd
+  - name: Enable HTTP secara Permanent
+    service: name=httpd state=started enabled=yes
 
 
 
-4. Ansible Playbook (Cara Penggunaan dengan Conditional)
+3. Ansible Playbook (Cara Penggunaan dengan Conditional)
 ---
   - hosts: servers
     gather_facts: yes
     become: yes
 
     vars:
-        yumname: vsftpd
+        yumname: httpd
 
     tasks:
-    - name: Check if FTP is already installed
-      command: rpm -qa | grep vsftpd
-      register: ftp_is_installed
+    - name: Check if HTTP is already installed
+      command: rpm -qa | grep httpd
+      register: http_is_installed
       failed_when: no
 
     - name: Install "{{ yumname }}"
       yum: name = "{{ yumname }}" state=present
-      when: ftp_is_installed.rc == 1
+      when: http_is_installed.rc == 1
       notify:
-      - restart vsftpd
+      - restart httpd
 ...
 
-5. Ansible Playbook (Cara Remove Paket yang sudah terinstall)
+4. Ansible Playbook (Cara Remove Paket yang sudah terinstall)
 ---
 - hosts: servers
   gather_facts: yes
   become: yes
   tasks:
-  - name: Hapus Instalasi FTP
-    yum: name=vsftpd state=removed
+  - name: Hapus Instalasi HTTP
+    yum: name=httpd state=removed
 ...
