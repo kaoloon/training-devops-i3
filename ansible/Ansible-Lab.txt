@@ -59,6 +59,7 @@ ansible servers -m yum -a ‘name=httpd state=present update_cache=true’
   tasks:
   - name: Instalasi HTTP
     yum: name=httpd state=installed
+    
   - name: Enable HTTP secara Permanent
     service: name=httpd state=started enabled=yes
 
