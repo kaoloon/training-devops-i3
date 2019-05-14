@@ -3,7 +3,7 @@
 ##########################
 
 #1. Install dependency
-sudo yum install curl policycoreutils-python openssh-server
+sudo yum install curl policycoreutils-python openssh-server vim
 #Install, start & enable Service Postfix
 sudo yum install postfix
 systemctl start postfix
@@ -11,13 +11,10 @@ systemctl enable postfix
 systemctl status postfix
 
 #2. Menambahkan Paket Gitlab ke Repo 
-curl \ https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.rpm.sh | \ sudo bash
+curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.rpm.sh | sudo bash
 
 #3. Install Gitlab
 EXTERNAL_URL="http://gitlab.devops.com" yum install -y gitlab-ce
-
-#4. Menampilkan versi Gitlab
-sudo gitlab --version
 
 
 #############################
