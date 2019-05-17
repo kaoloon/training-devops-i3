@@ -107,7 +107,7 @@ curl IP_HOST:100000
 
 ### ISR = Internal Service Registry ####
 #1. Menambahkan Settingan Insecure Registry
-sudo vi /etc/docker/daemon.json
+sudo vi /etc/docker/deamon.json
 {
   "insecure-registries": [
     "192.168.1.104:5000"
